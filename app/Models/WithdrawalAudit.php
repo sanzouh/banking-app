@@ -27,4 +27,8 @@ class WithdrawalAudit extends Model
      * @var string|null
      */
     public const CREATED_AT = 'created_at';
+
+    protected $primaryKey = 'id';
+    protected $keyType = 'integer';
+    public $incrementing = true;
 }

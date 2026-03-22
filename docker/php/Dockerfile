@@ -1,5 +1,12 @@
 FROM php:8.4-fpm
 
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+# Modifier l'UID et le GID de www-data pour correspondre à ceux de l'utilisateur hôte
+RUN usermod -u ${USER_ID} www-data \
+    && groupmod -g ${GROUP_ID} www-data
+
 # Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     git \
