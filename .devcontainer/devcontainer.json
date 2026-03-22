@@ -1,0 +1,17 @@
+{
+    "name": "Banking-App",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/var/www/html",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bmewburn.vscode-intelephense-client"
+            ],
+            "settings": {
+                "php.validate.enable": false,
+                "intelephense.environment.phpVersion": "8.4.0"
+            }
+        }
+    }
+}
