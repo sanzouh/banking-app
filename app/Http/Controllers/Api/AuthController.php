@@ -37,6 +37,8 @@ class AuthController extends Controller
             // role = 'User' par défaut
         ]);
         
+        // un seul token à la création
+        $user->tokens()->delete();
         $data["token"] = $user->createToken("register_token")->plainTextToken;
         $data["name"] = $user->name;
         $data["email"] = $user->email;
@@ -83,6 +85,9 @@ class AuthController extends Controller
             // Régénérer le token à chaque login (plus sécurisé)
             // $user->tokens()->where('name', 'login_token')->delete(); 
             
+            // Révoquer tous les anciens tokens avant d'en créer un nouveau
+            $user->tokens()->delete();
+            
             $data["token"] = $user->createToken("login_token")->plainTextToken;
             $data["name"] = $user->name;
             $data["email"] = $user->email;
@@ -103,5 +108,14 @@ class AuthController extends Controller
     }
 
     //logout
-    
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Déconnecté avec succès',
+            "data" => null
+        ]);
+    }
 }

@@ -18,15 +18,14 @@ Route::middleware(['auth:sanctum', 'abilities:users:read'])->get('/users', funct
 Route::post("/register", [AuthController::class, "register"]);
 Route::post("/login", [AuthController::class, "login"]);
 
-
+// Only authenticated users can access these routes
 Route::middleware("auth:sanctum")->group(function (){
-    // Only authenticated users can access this
-    
     Route::apiResource("clients", ClientController::class);
     Route::apiResource("withdrawals", WithdrawalController::class);
 
     // Audit — lecture seule
     Route::get('withdrawals-audit', [WithdrawalAuditController::class, 'index']);
     Route::get('withdrawals-audit/stats', [WithdrawalAuditController::class, 'stats']);
-    // Route::post("/logout", AuthController::class); 
+    
+    Route::post("/logout", [AuthController::class, "logout"]); 
 });
