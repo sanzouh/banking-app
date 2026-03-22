@@ -77,12 +77,12 @@ class AuthController extends Controller
         if(Auth::attempt($validated)){
             
             $data = [];
+            /** @var \App\Models\User $user */
             $user = Auth::user(); //Recup l'user authentifié
             
             // Régénérer le token à chaque login (plus sécurisé)
             // $user->tokens()->where('name', 'login_token')->delete(); 
             
-            /** @var \App\Models\User $authenticatedUser */
             $data["token"] = $user->createToken("login_token")->plainTextToken;
             $data["name"] = $user->name;
             $data["email"] = $user->email;
