@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreClientRequest;
+use App\Http\Requests\Client\UpdateClientRequest;
 use App\Models\Client;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
     function index() {
-        $clients = Client::paginate(5);
+        $clients = Client::paginate(15);
         return response()->json([
             "status" => 1,
             "message" => "Clients récupérés",
@@ -40,23 +41,24 @@ class ClientController extends Controller
     function show($id) {
         $client = Client::find($id);
 
-        if($client){
+        if(!$client){
             return response()->json([
                 "status" => 0,
-                "message" => "Client trouvé",
-                "data" => $client
-            ]);
-        } else{
-            return response()->json([
-                "status" => 1,
                 "message" => "Client non trouvé",
                 "data" => null
-            ]);
+            ], 404);
         }
+
+        return response()->json([
+            "status" => 1,
+            "message" => "Client trouvé",
+            "data" => $client
+        ]);
     }
 
-    function update(Request $request, $id) {
-        $client = Client::findOrFail($id);
+    function update(UpdateClientRequest $request, $id) {
+        
+/*         $client = Client::findOrFail($id);
         $client->account_num = $request->account_num;
         $client->name = $request->name;
         $client->balance = $request->balance;
@@ -66,22 +68,40 @@ class ClientController extends Controller
             "status" => 1,
             "message" => "Client mis à jour",
             "data" => $client
-        ]);
+        ]); */
         
-        /* $clientToBeUpdated = Client::findOrFail($id);
-        $clientToBeUpdated->update($request->all());
+        $client = Client::findOrFail($id);
 
-        $upToDateClient = Client::find($clientToBeUpdated->account_num);
+        if (!$client) {
+            return response()->json([
+                'status'  => 0,
+                'message' => 'Client non trouvé',
+                'data'    => null
+            ], 404);
+        }
+
+        $client->update($request->validated());
+
         return response()->json([
             "status" => 1,
             "message" => "Client mis à jour",
-            "data" => $upToDateClient
-        ]); */
+            "data" => $client
+        ]);
     }
 
     function destroy($id) {
-        $clientToBeDeleted = Client::find($id);
-        $clientToBeDeleted->delete();
+        $client = Client::find($id);
+
+        if (!$client) {
+            return response()->json([
+                'status'  => 0,
+                'message' => 'Client non trouvé',
+                'data'    => null
+            ], 404);
+        }
+
+        $client->delete();
+
         return response()->json([
             "status" => 1,
             "message" => "Client supprimé",

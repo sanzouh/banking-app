@@ -45,19 +45,19 @@ class WithdrawalController extends Controller
     {
         $withdrawal = Withdrawal::find($id);
 
-        if($withdrawal){
+        if(!$withdrawal){
             return response()->json([
                 "status" => 0,
-                "message" => "Retrait trouvé",
-                "data" => $withdrawal
-            ]);
-        } else{
-            return response()->json([
-                "status" => 1,
                 "message" => "Retrait non trouvé",
                 "data" => null
-            ]);
+            ], 404);
         }
+
+        return response()->json([
+            "status" => 1,
+            "message" => "Retrait trouvé",
+            "data" => $withdrawal
+        ]);
     }
 
     /**
