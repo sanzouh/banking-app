@@ -1,1 +1,5 @@
-register_token(register): 1|UUIcx4ns2X2d4WrQ8YfwRH0BPjwg5zF2RwEFIUADb43a001f    
+register_token(register): // (role='Admin')
+register_token: // User
+
+login_token(login): // (role='Admin')
+login_token: // User

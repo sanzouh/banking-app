@@ -18,14 +18,19 @@ Route::middleware(['auth:sanctum', 'abilities:users:read'])->get('/users', funct
 Route::post("/register", [AuthController::class, "register"]);
 Route::post("/login", [AuthController::class, "login"]);
 
-// Only authenticated users can access these routes
-Route::middleware("auth:sanctum")->group(function (){
+// Only authenticated users can access routes with "auth:sanctum" middleware
+// Fenêtre User → CRUD clients et withdrawals
+Route::middleware(["auth:sanctum", "role:User"])->group(function (){
     Route::apiResource("clients", ClientController::class);
     Route::apiResource("withdrawals", WithdrawalController::class);
+});
 
+// Fenêtre Admin → lecture seule audit
+Route::middleware(["auth:sanctum", "role:Admin"])->group(function (){
     // Audit — lecture seule
     Route::get('withdrawals-audit', [WithdrawalAuditController::class, 'index']);
     Route::get('withdrawals-audit/stats', [WithdrawalAuditController::class, 'stats']);
-    
-    Route::post("/logout", [AuthController::class, "logout"]); 
 });
+
+// Commun aux deux fenêtres
+Route::middleware("auth:sanctum")->post("/logout", [AuthController::class, "logout"]);

@@ -15,8 +15,12 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (! $request->user()->hasRole($role)) {
-            // Redirect...
+        if (!$request->user()->hasRole($role)) {
+            return response()->json([
+            'status'  => 0,
+            'message' => 'Accès refusé, rôle insuffisant',
+            'data'    => null
+            ], 403);
         }
  
         return $next($request);
