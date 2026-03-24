@@ -19,7 +19,8 @@ class WithdrawalFactory extends Factory
         return [
             'withdraw_num' => fake()->unique()->numerify('#####'),
             'check_num' => fake()->unique()->numerify('#####'),
-            'account_num' => \App\Models\Client::factory(),
+            // récupère l'account_num du client créé
+            'account_num' => \App\Models\Client::factory()->create()->account_num,
             'amount' => fake()->numberBetween(1000, 10000000),
             'user_id' => \App\Models\User::factory()
         ];

@@ -25,7 +25,7 @@ class AuthController extends Controller
                 "status" => 0,
                 "message" => "Validation error",
                 "data" => $validator->errors()->all()
-            ]);
+            ], 422);
         }
 
         $data = [];
