@@ -3,33 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function register(Request $request) {
-
-        $rules = [
-            "name" => "required|string|max:255",
-            "email" => "required|email|unique:users",
-            "password" => "required|min:4" //|confirmed: pr que le password et le confirm_password soient identiques
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if($validator->fails()){
-            return response()->json([
-                "status" => 0,
-                "message" => "Validation error",
-                "data" => $validator->errors()->all()
-            ], 422);
-        }
-
-        $data = [];
-
+    public function register(RegisterRequest $request) {
         $user = User::create([
             "name" => $request->name,
             "email" => $request->email,
@@ -39,14 +21,15 @@ class AuthController extends Controller
         
         // un seul token à la création
         $user->tokens()->delete();
-        $data["token"] = $user->createToken("register_token")->plainTextToken;
-        $data["name"] = $user->name;
-        $data["email"] = $user->email;
-
+        
         return response()->json([
             "status" => 1,
             "message" => "utilisateur enregistré",
-            "data" => $data
+            "data" => [
+                'token' => $user->createToken('register_token')->plainTextToken,
+                'name'  => $user->name,
+                'email' => $user->email
+            ]
         ], 201);
 
     }
@@ -55,7 +38,7 @@ class AuthController extends Controller
      * 
      * @return Response()
      */
-    public function login(Request $request) {
+    public function login(LoginRequest $request) {
     /*  1. Valider email + password
 
         2. Vérifier les credentials
@@ -70,41 +53,33 @@ class AuthController extends Controller
 
         5. Retourner token + user + role */
 
-        $validated = $request->validate([
-            "email" => "required|email|max:255",
-            "password" => "required|string|max:255"
-        ]);
-
-        // si validate() échoue il retourne directement une 422 sans passer par le if
-        if(Auth::attempt($validated)){
-            
-            $data = [];
-            /** @var \App\Models\User $user */
-            $user = Auth::user(); //Recup l'user authentifié
-            
-            // Régénérer le token à chaque login (plus sécurisé)
-            // $user->tokens()->where('name', 'login_token')->delete(); 
-            
-            // Révoquer tous les anciens tokens avant d'en créer un nouveau
-            $user->tokens()->delete();
-            
-            $data["token"] = $user->createToken("login_token")->plainTextToken;
-            $data["name"] = $user->name;
-            $data["email"] = $user->email;
-            $data["role"] = $user->role;
-    
+        if (!Auth::attempt($request->validated())) {
             return response()->json([
-                "status" => 1,
-                "message" => "utilisateur connecté",
-                "data" => $data
-            ], 200);
+                'status'  => 0,
+                'message' => 'Identifiants incorrects',
+                'data'    => null
+            ], 401); // 401 = non autorisé
         }
+        
+        /** @var \App\Models\User $user */
+        $user = Auth::user(); //Recup l'user authentifié
+        
+        // Révoquer tous les anciens tokens avant d'en créer un nouveau
+        $user->tokens()->delete();
+        
 
         return response()->json([
-            "status" => 0,
-            "message" => "Identifiants incorrects",
-            "data" => null
-        ], 401); // 401 = non autorisé
+            "status" => 1,
+            "message" => "utilisateur connecté",
+            "data" => [
+                'token' => $user->createToken('login_token')->plainTextToken,
+                'name'  => $user->name,
+                'email' => $user->email,
+                'role'  => $user->role
+            ]
+        ], 200);
+
+
     }
 
     //logout
