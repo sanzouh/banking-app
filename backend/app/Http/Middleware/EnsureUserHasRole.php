@@ -15,11 +15,13 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (!$request->user()->hasRole($role)) {
+        $user = $request->user('sanctum') ?? $request->user();
+
+        if (!$user || !$user->hasRole($role)) {
             return response()->json([
-            'status'  => 0,
-            'message' => 'Accès refusé, rôle insuffisant',
-            'data'    => null
+                'status'  => 0,
+                'message' => 'Accès refusé, rôle insuffisant',
+                'data'    => null,
             ], 403);
         }
  

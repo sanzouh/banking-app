@@ -1,5 +1,5 @@
-register_token(register): // (role='Admin')
-register_token: 4|NqsWJnEX4DFqW5NmjWJF4fuLB8XVTQNlEvsdYZgdbe5ca5e2 User
+register_token(register): 5|IVEzj3MOStd731imteSuioJcTrJ8eXdqsAk6LEeP12835468 // (role='Admin')
+register_token:  //User
 
 login_token(login): // (role='Admin')
 login_token: // User
