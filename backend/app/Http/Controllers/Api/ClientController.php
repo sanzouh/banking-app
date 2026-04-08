@@ -58,7 +58,8 @@ class ClientController extends Controller
 
     function update(UpdateClientRequest $request, $id) {
         
-/*         $client = Client::findOrFail($id);
+    /**         
+        $client = Client::findOrFail($id);
         $client->account_num = $request->account_num;
         $client->name = $request->name;
         $client->balance = $request->balance;
@@ -68,7 +69,8 @@ class ClientController extends Controller
             "status" => 1,
             "message" => "Client mis à jour",
             "data" => $client
-        ]); */
+        ]); 
+    */
         
         $client = Client::findOrFail($id);
 

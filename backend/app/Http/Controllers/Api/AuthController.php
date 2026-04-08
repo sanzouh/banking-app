@@ -11,6 +11,37 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    /**
+    
+       @OA\Post(
+           path="/api/register",
+           summary="Créer un compte utilisateur",
+           tags={"Auth"},
+      
+           @OA\RequestBody(
+               required=true,
+               @OA\JsonContent(
+                   required={"name","email","password"},
+                   @OA\Property(property="name",     type="string",  example="John Doe"),
+                   @OA\Property(property="email",    type="string",  example="john@test.com"),
+                   @OA\Property(property="password", type="string",  example="password123")
+               )
+           ),
+      
+           @OA\Response(
+               response=201,
+               description="Utilisateur enregistré",
+               @OA\JsonContent(
+                   @OA\Property(property="status",  type="integer", example=1),
+                   @OA\Property(property="message", type="string",  example="utilisateur enregistré"),
+                   @OA\Property(property="data", ref="#/components/schemas/RegisterResponse"
+                   )
+               )
+           ),
+           @OA\Response(response=422, description="Validation échouée")
+       )
+
+    */
     public function register(RegisterRequest $request) {
         $user = User::create([
             "name" => $request->name,
@@ -35,11 +66,39 @@ class AuthController extends Controller
     }
 
     /**
-     * 
-     * @return Response()
-     */
+    
+        @OA\Post(
+            path="/api/login",
+            summary="Se connecter",
+            tags={"Auth"},
+        
+            @OA\RequestBody(
+                required=true,
+                @OA\JsonContent(
+                    required={"email","password"},
+                    @OA\Property(property="email",    type="string",  example="john@test.com"),
+                    @OA\Property(property="password", type="string",  example="password123")
+                )
+            ),
+
+            @OA\Response(
+                response=200,
+                description="Connecté",
+                @OA\JsonContent(
+                    @OA\Property(property="status",  type="integer", example=1),
+                    @OA\Property(property="message", type="string",  example="utilisateur connecté"),
+                    @OA\Property(property="data", ref="#/components/schemas/LoginResponse"
+                    )
+                )
+            ),
+            @OA\Response(response=401, description="Identifiants incorrects"),
+            @OA\Response(response=422, description="Validation échouée")
+        )
+
+    */
     public function login(LoginRequest $request) {
-    /*  1. Valider email + password
+    /**
+        1. Valider email + password
 
         2. Vérifier les credentials
         Auth::attempt(['email' => ..., 'password' => ...])
@@ -51,7 +110,8 @@ class AuthController extends Controller
         4. Générer le token Sanctum
         $user->createToken('auth_token')->plainTextToken
 
-        5. Retourner token + user + role */
+        5. Retourner token + user + role 
+    */
 
         if (!Auth::attempt($request->validated())) {
             return response()->json([
@@ -79,10 +139,29 @@ class AuthController extends Controller
             ]
         ], 200);
 
-
     }
 
-    //logout
+    /**
+    
+        @OA\Post(
+            path="/api/logout",
+            summary="Se déconnecter",
+            tags={"Auth"},
+            security={{"bearerAuth":{}}},
+
+            @OA\Response(
+                response=200,
+                description="Déconnecté",
+                @OA\JsonContent(
+                    @OA\Property(property="status",  type="integer", example=1),
+                    @OA\Property(property="message", type="string",  example="Déconnecté avec succès"),
+                    @OA\Property(property="data",    type="null",    example=null)
+                )
+            ),
+        ),
+        @OA\Response(response=401, description="Non authentifié")
+
+    */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

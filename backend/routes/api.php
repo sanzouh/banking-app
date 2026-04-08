@@ -6,15 +6,6 @@ use App\Http\Controllers\Api\WithdrawalAuditController;
 use App\Http\Controllers\Api\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 
-/* Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-Route::middleware(['auth:sanctum', 'abilities:users:read'])->get('/users', function(Request $request){
-    return User::all();
-}); */
-
-
 Route::post("/register", [AuthController::class, "register"]);
 Route::post("/login", [AuthController::class, "login"]);
 
