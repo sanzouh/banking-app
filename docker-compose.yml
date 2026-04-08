@@ -1,5 +1,5 @@
 services:
-  app:
+  backend:
     build:
       context: ./backend
       dockerfile: docker/php/Dockerfile
@@ -9,7 +9,7 @@ services:
     volumes:
       - ./backend:/var/www/html
     networks:
-      - banking_network
+      - network
     depends_on:
       db:
         condition: service_healthy
@@ -22,9 +22,9 @@ services:
       - ./backend:/var/www/html
       - ./backend/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - app
+      - backend
     networks:
-      - banking_network
+      - network
 
   db:
     image: mysql:8.0
@@ -39,30 +39,33 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     networks:
-      - banking_network
+      - network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
       interval: 5s
-
-  # node:
-  #   image: node:22-alpine
-  #   working_dir: /var/www/html
-  #   volumes:
-  #     - .:/var/www/html
-  #     - /var/www/html/node_modules 
-  #   command: sh -c "npm install && npm run build"  #  '-- --host': installe les deps puis lance Vite
-  #   ports:
-  #     - "5173:5173"
-  #   networks:
-  #     - banking_network
-  #   depends_on:
-  #     - app
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      # volume anonyme (sans nom) qui empêche le dossier local d'écraser les modules installés dans le container.
+      # Sans lui, Docker monterait le node_modules local vide par-dessus celui du container — Vite ne trouverait plus ses dépendances.
+      - frontend_node_modules:/app/node_modules
+    networks:
+      - network
+    depends_on:
+      - backend
 
 networks:
-  banking_network:
+  network:
     driver: bridge
 
 volumes:
   dbdata:
+  frontend_node_modules:
