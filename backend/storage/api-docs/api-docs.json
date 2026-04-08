@@ -503,6 +503,321 @@
                     }
                 ]
             }
+        },
+        "/api/withdrawals": {
+            "get": {
+                "tags": [
+                    "Retraits"
+                ],
+                "summary": "Liste des retraits",
+                "operationId": "41cbd0659b14c094a213e5e5a5a48a0a",
+                "responses": {
+                    "200": {
+                        "description": "Retraits récupérés",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retraits récupérés"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Withdrawal"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Retraits"
+                ],
+                "summary": "Créer un retrait",
+                "operationId": "545a78357c21fb49554f7b40e80fbe6b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "withdraw_num",
+                                    "check_num",
+                                    "account_num",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "withdraw_num": {
+                                        "type": "integer",
+                                        "example": 11111
+                                    },
+                                    "check_num": {
+                                        "type": "integer",
+                                        "example": 22222
+                                    },
+                                    "account_num": {
+                                        "type": "integer",
+                                        "example": 12345
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 500
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Retrait créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retrait créé avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Withdrawal"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation échouée"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/withdrawals/{withdraw_num}": {
+            "get": {
+                "tags": [
+                    "Retraits"
+                ],
+                "summary": "Afficher un retrait",
+                "operationId": "e879e19f1a3a560d67d70f8a7c893fac",
+                "parameters": [
+                    {
+                        "name": "withdraw_num",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 11111
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrait trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retrait trouvé"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Withdrawal"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Retrait non trouvé"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Retraits"
+                ],
+                "summary": "Mettre à jour un retrait",
+                "operationId": "73e287735029784f1c2595f57986ad45",
+                "parameters": [
+                    {
+                        "name": "withdraw_num",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 11111
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "check_num": {
+                                        "type": "integer",
+                                        "example": 33333
+                                    },
+                                    "account_num": {
+                                        "type": "integer",
+                                        "example": 12345
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 999.99
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Retrait mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retrait mis à jour avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Withdrawal"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Retrait non trouvé"
+                    },
+                    "422": {
+                        "description": "Validation échouée"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Retraits"
+                ],
+                "summary": "Supprimer un retrait",
+                "operationId": "76d876f510381af729b267a76fd47d21",
+                "parameters": [
+                    {
+                        "name": "withdraw_num",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 11111
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrait supprimé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Retrait supprimé"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "example": null
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Retrait introuvable"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -562,6 +877,32 @@
                     }
                 },
                 "type": "object"
+            },
+            "Withdrawal": {
+                "properties": {
+                    "withdraw_num": {
+                        "type": "integer",
+                        "example": 11111
+                    },
+                    "check_num": {
+                        "type": "integer",
+                        "example": 22222
+                    },
+                    "account_num": {
+                        "type": "integer",
+                        "example": 12345
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 500
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
             }
         },
         "responses": {
@@ -587,6 +928,10 @@
         {
             "name": "Clients",
             "description": "Clients"
+        },
+        {
+            "name": "Retraits",
+            "description": "Retraits"
         }
     ]
 }

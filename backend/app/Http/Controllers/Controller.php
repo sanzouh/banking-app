@@ -45,6 +45,15 @@ namespace App\Http\Controllers;
                 @OA\Property(property="name",        type="string",  example="Rakoto Andry"),
                 @OA\Property(property="balance",     type="number",  format="float", example=1500.00)
             ),
+
+           @OA\Schema(
+               schema="Withdrawal",
+               @OA\Property(property="withdraw_num", type="integer", example=11111),
+               @OA\Property(property="check_num", type="integer", example=22222),
+               @OA\Property(property="account_num", type="integer", example=12345),
+               @OA\Property(property="amount", type="number", format="float", example=500.00),
+               @OA\Property(property="user_id", type="integer", example=1),
+           ),
         ),
     )
 
