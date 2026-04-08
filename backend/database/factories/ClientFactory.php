@@ -17,7 +17,7 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         return [
-            'account_num' => fake()->unique()->numerify('#####'),
+            'account_num' => fake()->unique()->numberBetween(10000, 99999),
             'name'    => fake()->name(),
             'balance' => fake()->randomFloat(2, 500, 500000),
         ];
