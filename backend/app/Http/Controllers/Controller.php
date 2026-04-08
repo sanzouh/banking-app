@@ -54,6 +54,19 @@ namespace App\Http\Controllers;
                @OA\Property(property="amount", type="number", format="float", example=500.00),
                @OA\Property(property="user_id", type="integer", example=1),
            ),
+
+            @OA\Schema(
+                schema="WithdrawalAudit",
+                @OA\Property(property="id",           type="integer", example=1),
+                @OA\Property(property="action_type",  type="string",  example="INSERT"),
+                @OA\Property(property="created_at",   type="string",  format="datetime", example="2026-01-01 12:00:00"),
+                @OA\Property(property="withdraw_num", type="integer", example=11111),
+                @OA\Property(property="account_num",  type="integer", example=12345),
+                @OA\Property(property="client_name",  type="string",  example="Rakoto Andry"),
+                @OA\Property(property="old_amount",   type="number",  format="float", example=1000.00, nullable=true),
+                @OA\Property(property="new_amount",   type="number",  format="float", example=2000.00, nullable=true),
+                @OA\Property(property="user",         type="string",  example="John Doe")
+            )
         ),
     )
 

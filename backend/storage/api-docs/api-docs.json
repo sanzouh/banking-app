@@ -504,6 +504,144 @@
                 ]
             }
         },
+        "/api/withdrawals-audit": {
+            "get": {
+                "tags": [
+                    "Audit"
+                ],
+                "summary": "Liste des audits de retraits (paginée)",
+                "operationId": "fa4d19bd2f44830f83dcfdd9e0b8ff59",
+                "responses": {
+                    "200": {
+                        "description": "Audits récupérés",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Liste des audits"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/WithdrawalAudit"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "403": {
+                        "description": "Accès refusé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/withdrawals-audit/stats": {
+            "get": {
+                "tags": [
+                    "Audit"
+                ],
+                "summary": "Statistiques des opérations",
+                "operationId": "894d7e74554c0cadb8167d3ea9b787d3",
+                "responses": {
+                    "200": {
+                        "description": "Statistiques des opérations",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Statistiques des opérations"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "inserts": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "updates": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "deletes": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "403": {
+                        "description": "Accès refusé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/withdrawals": {
             "get": {
                 "tags": [
@@ -903,6 +1041,52 @@
                     }
                 },
                 "type": "object"
+            },
+            "WithdrawalAudit": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "action_type": {
+                        "type": "string",
+                        "example": "INSERT"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2026-01-01 12:00:00"
+                    },
+                    "withdraw_num": {
+                        "type": "integer",
+                        "example": 11111
+                    },
+                    "account_num": {
+                        "type": "integer",
+                        "example": 12345
+                    },
+                    "client_name": {
+                        "type": "string",
+                        "example": "Rakoto Andry"
+                    },
+                    "old_amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1000,
+                        "nullable": true
+                    },
+                    "new_amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 2000,
+                        "nullable": true
+                    },
+                    "user": {
+                        "type": "string",
+                        "example": "John Doe"
+                    }
+                },
+                "type": "object"
             }
         },
         "responses": {
@@ -928,6 +1112,10 @@
         {
             "name": "Clients",
             "description": "Clients"
+        },
+        {
+            "name": "Audit",
+            "description": "Audit"
         },
         {
             "name": "Retraits",
