@@ -38,7 +38,14 @@ namespace App\Http\Controllers;
                 @OA\Property(property="email", type="string", example="john@test.com"),
                 @OA\Property(property="role", type="string", example="User")
             ),
-        )
+
+            @OA\Schema(
+                schema="Client",
+                @OA\Property(property="account_num", type="integer", example=12345),
+                @OA\Property(property="name",        type="string",  example="Rakoto Andry"),
+                @OA\Property(property="balance",     type="number",  format="float", example=1500.00)
+            ),
+        ),
     )
 
  */
