@@ -54,7 +54,7 @@ services:
       - "5173:5173"
     volumes:
       - ./frontend:/app
-      # volume anonyme (sans nom) qui empêche le dossier local d'écraser les modules installés dans le container.
+      # volume anonyme (c-à-d sans nom, supprimé après l'arrêt du conteneur => réinstallation à chaque démarrage) ou nommé (persistant) qui empêche le dossier local d'écraser le node_modules installé dans le container frontend.
       # Sans lui, Docker monterait le node_modules local vide par-dessus celui du container — Vite ne trouverait plus ses dépendances.
       - frontend_node_modules:/app/node_modules
     networks:
